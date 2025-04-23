@@ -7,7 +7,7 @@ import { execute, getOne, query } from '../client';
 // Lấy tất cả môn học
 export async function getAllSubjects(): Promise<Subject[]> {
   const sql = `
-    SELECT * FROM subjects
+    SELECT id, name, description, icon_url, slug FROM subjects
     ORDER BY name
   `;
   
@@ -17,7 +17,7 @@ export async function getAllSubjects(): Promise<Subject[]> {
 // Lấy môn học theo ID
 export async function getSubjectById(id: number): Promise<Subject | null> {
   const sql = `
-    SELECT * FROM subjects
+    SELECT id, name, description, icon_url, slug FROM subjects
     WHERE id = ?
   `;
   
@@ -27,7 +27,7 @@ export async function getSubjectById(id: number): Promise<Subject | null> {
 // Lấy môn học theo slug
 export async function getSubjectBySlug(slug: string): Promise<Subject | null> {
   const sql = `
-    SELECT * FROM subjects
+    SELECT id, name, description, icon_url, slug FROM subjects
     WHERE slug = ?
   `;
 

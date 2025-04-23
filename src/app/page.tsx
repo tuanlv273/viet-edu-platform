@@ -2,8 +2,11 @@
 // Trang chủ của ứng dụng
 
 import Link from 'next/link';
+import { getAllSubjects } from '@/lib/db/models/subject';
+import { Subject } from '@/lib/db/schema';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const subjects: Subject[] = await getAllSubjects();
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
@@ -36,16 +39,14 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {[
                 { name: 'Toán', icon: '📊', color: 'bg-red-100 text-red-600' },
-                { name: 'Tiếng Anh', icon: '🔤', color: 'bg-blue-100 text-blue-600' },
-                { name: 'Vật lý', icon: '⚛️', color: 'bg-purple-100 text-purple-600' },
-                { name: 'Hóa học', icon: '🧪', color: 'bg-green-100 text-green-600' },
-                { name: 'Tin học', icon: '💻', color: 'bg-yellow-100 text-yellow-600' },
-              ].map((subject, index) => (
+              ].length === 0 ? subjects.map((subject) => (
                 <Link 
-                  key={index}
-                  href={`/subjects/${subject.name.toLowerCase().replace(' ', '-')}`}
+                  key={subject.id}
+                  href={`/subjects/${subject.slug}`}
                   className={`${subject.color} rounded-xl p-6 text-center hover:shadow-md transition-shadow`}
                 >
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
+
                   <div className="text-4xl mb-3">{subject.icon}</div>
                   <h3 className="text-xl font-semibold">{subject.name}</h3>
                 </Link>
