@@ -31,7 +31,7 @@ export async function getSubjectBySlug(slug: string): Promise<Subject | null> {
     WHERE slug = ?
   `;
 
-  return await getOne(sql, [id]);
+  return await getOne(sql, [slug]);
 }
 
 // Tạo môn học mới
