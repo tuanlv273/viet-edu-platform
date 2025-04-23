@@ -2,12 +2,14 @@ import { Subject } from '@/lib/db/schema';
 import { getSubjectBySlug } from '@/lib/db/models/subject';
 
 interface SubjectDetailPageProps {
-  params: { subjectId: string };
+  params: { slug: string };
 }
 
 export default async function SubjectDetailPage({ params }: SubjectDetailPageProps) {
-  const subjectSlug = params.subjectId;
-  const subject: Subject | null = await getSubjectBySlug(subjectSlug);
+  const slug = params.slug;
+  const subject: Subject | null = await getSubjectBySlug(slug);
+
+  console.log('SubjectDetailPage: subject data:', subject);
 
   if (!subject) {
     return <div>Subject not found</div>;
