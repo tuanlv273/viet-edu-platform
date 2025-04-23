@@ -40,7 +40,7 @@ export async function getUserProgress(userId: number): Promise<ProgressQueryResu
       JOIN lessons l ON up.lesson_id = l.id
       JOIN subjects s ON l.subject_id = s.id
       WHERE up.user_id = ?
-      GROUP BY l.subject_id, s.name
+      GROUP BY l.subject_id, s.name, l.grade_id
       ORDER BY MAX(up.last_accessed_at) DESC
     `;
     

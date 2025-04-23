@@ -1,4 +1,3 @@
-tsx
 import { Subject } from '@/lib/db/schema';
 import { getSubjectById } from '@/lib/db/models/subject';
 
