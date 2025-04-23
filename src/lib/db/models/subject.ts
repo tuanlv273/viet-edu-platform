@@ -31,7 +31,9 @@ export async function getSubjectBySlug(slug: string): Promise<Subject | null> {
     WHERE slug = ?
   `;
 
-  return await getOne(sql, [slug]);
+  const subject = await getOne(sql, [slug]);
+  console.log('Subject data:', subject);
+  return subject;
 }
 
 // Tạo môn học mới
