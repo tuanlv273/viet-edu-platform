@@ -8,7 +8,8 @@ import { Subject } from '@/lib/db/schema';
 export default async function HomePage() {
   const subjects: Subject[] = await getAllSubjects();
   return (
-    <div className="flex flex-col min-h-screen">
+   <div>
+      <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
         <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
           <div className="container mx-auto px-4">
@@ -37,20 +38,17 @@ export default async function HomePage() {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Các môn học</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-              {[
-                { name: 'Toán', icon: '📊', color: 'bg-red-100 text-red-600' },
-              ].length === 0 ? subjects.map((subject) => (
-                <Link 
-                  key={subject.id}
-                  href={`/subjects/${subject.slug}`}
-                  className={`${subject.color} rounded-xl p-6 text-center hover:shadow-md transition-shadow`}
-                >
-                  {/* eslint-disable-next-line react/no-unescaped-entities */}
-
-                  <div className="text-4xl mb-3">{subject.icon}</div>
-                  <h3 className="text-xl font-semibold">{subject.name}</h3>
-                </Link>
-              ))}
+              {subjects.map((subject) => (
+                  <Link
+                    key={subject.id}
+                    href={`/subjects/${subject.slug}`}
+                    className={`rounded-xl p-6 text-center hover:shadow-md transition-shadow`}
+                  >
+                   
+                    <div className="text-4xl mb-3">📚</div>
+                    <h3 className="text-xl font-semibold">{subject.name}</h3>
+                  </Link>
+                ))}
             </div>
           </div>
         </section>
@@ -157,5 +155,6 @@ export default async function HomePage() {
         </div>
       </footer>
     </div>
+   </div>
   );
 }
