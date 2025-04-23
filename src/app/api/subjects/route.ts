@@ -16,9 +16,12 @@ export async function GET(request: NextRequest) {
       subjects = await getAllSubjects();
     }
     
+    // Ensure subjects is always an array
+    const subjectsArray = Array.isArray(subjects) ? subjects : (subjects ? [subjects] : []);
+    
     return NextResponse.json({
       success: true,
-      subjects
+      subjects: subjectsArray
     });
   } catch (error) {
     console.error('Error fetching subjects:', error);

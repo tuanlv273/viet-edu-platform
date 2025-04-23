@@ -4,7 +4,7 @@
 import { getUserOverallProgress, getSubjectProgressDetail } from '../progress/progressManager';
 import { getLessonsBySubjectAndGrade } from '../db/models/lesson';
 import { getQuizzesBySubjectAndGrade } from '../db/models/quiz';
-import { getSubjects } from '../db/models/subject';
+import { getSubjectsByGrade } from '../db/models/subject';
 
 // Interface cho đề xuất bài học
 export interface LessonRecommendation {
@@ -74,7 +74,7 @@ export async function generateLessonRecommendations(
     const userProgress = await getUserOverallProgress(userId);
     
     // Lấy danh sách môn học
-    const subjects = await getSubjects(gradeId);
+    const subjects = await getSubjectsByGrade(gradeId);
     
     const recommendations: LessonRecommendation[] = [];
     
@@ -204,7 +204,7 @@ export async function generateQuizRecommendations(
     const userProgress = await getUserOverallProgress(userId);
     
     // Lấy danh sách môn học
-    const subjects = await getSubjects(gradeId);
+    const subjects = await getSubjectsByGrade(gradeId);
     
     const recommendations: QuizRecommendation[] = [];
     
@@ -332,7 +332,7 @@ export async function generateLearningPath(
     const userProgress = await getUserOverallProgress(userId);
     
     // Lấy danh sách môn học
-    const subjects = await getSubjects(gradeId);
+    const subjects = await getSubjectsByGrade(gradeId);
     
     // Tính toán ưu tiên cho từng môn học
     const subjectPriorities = subjects.map(subject => {

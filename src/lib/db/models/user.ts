@@ -133,15 +133,16 @@ export async function getUserRoles(userId: number): Promise<UserRole[]> {
     WHERE ur.user_id = ?
   `;
   
-  return await query(sql, [userId]);
+  const result = await query(sql, [userId]);
+  return result.results as UserRole[];
 }
 
 // Gán vai trò cho người dùng
 export async function assignRoleToUser(userId: number, roleId: number): Promise<boolean> {
+  // MySQL không hỗ trợ ON CONFLICT như SQLite, sử dụng INSERT IGNORE thay thế
   const sql = `
-    INSERT INTO user_roles (user_id, role_id)
-    VALUES (?, ?)
-    ON CONFLICT (user_id, role_id) DO NOTHING
+    INSERT IGNORE INTO user_roles (user_id, role_id, created_at)
+    VALUES (?, ?, CURRENT_TIMESTAMP)
   `;
   
   const result = await execute(sql, [userId, roleId]);

@@ -49,7 +49,9 @@ export default function SubjectsPage() {
         const data = await response.json();
         
         if (data.success) {
-          setSubjects(data.subjects);
+          // Ensure subjects is always an array
+          const subjectsArray = Array.isArray(data.subjects) ? data.subjects : [];
+          setSubjects(subjectsArray);
         } else {
           throw new Error(data.error || 'Lỗi không xác định');
         }
@@ -66,8 +68,26 @@ export default function SubjectsPage() {
     }
   }, [user, loading, router]);
 
-  const handleSubjectClick = (subjectId: number) => {
-    router.push(`/subjects/${subjectId}/lessons`);
+  // Hàm chuyển đổi tên tiếng Việt sang slug không dấu
+  const convertToSlug = (text: string): string => {
+    // Chuyển đổi sang chữ thường và loại bỏ dấu
+    const slug = text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      // Thay thế các ký tự không phải chữ cái và số bằng dấu gạch ngang
+      .replace(/[^a-z0-9]+/g, "-")
+      // Loại bỏ dấu gạch ngang ở đầu và cuối
+      .replace(/^-+|-+$/g, "");
+    
+    return slug;
+  };
+
+  const handleSubjectClick = (subject: Subject) => {
+    // Sử dụng ID thay vì tên để tránh vấn đề với ký tự tiếng Việt trong URL
+    router.push(`/subjects/${subject.id}/lessons`);
   };
 
   if (loading || isLoading) {
@@ -106,7 +126,7 @@ export default function SubjectsPage() {
               <SubjectCard
                 key={subject.id}
                 subject={subject}
-                onClick={() => handleSubjectClick(subject.id)}
+                onClick={() => handleSubjectClick(subject)}
               />
             ))}
           </div>

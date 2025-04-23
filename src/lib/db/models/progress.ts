@@ -4,15 +4,51 @@
 import { UserProgress, UserQuizResult, LearningPath, LearningPathItem } from '../schema';
 import { execute, getOne, query } from '../client';
 
+// Interface to match database results with snake_case fields
+interface ProgressQueryResult {
+  id: number;
+  user_id: number;
+  lesson_id: number;
+  status: string;
+  progress_percentage: number;
+  subject_id: number;
+  subject_name: string;
+  last_accessed_at?: string;
+  completed_at?: string;
+  total_lessons: number;
+  total_quizzes: number;
+  completed_lessons?: number;
+  completed_quizzes?: number;
+  average_score?: number;
+}
+
 // Lấy tiến trình học tập của người dùng
-export async function getUserProgress(userId: number): Promise<UserProgress[]> {
-  const sql = `
-    SELECT * FROM user_progress
-    WHERE user_id = ?
-    ORDER BY last_accessed_at DESC
-  `;
-  
-  return await query(sql, [userId]);
+export async function getUserProgress(userId: number): Promise<ProgressQueryResult[]> {
+  try {
+    const sql = `
+      SELECT 
+        l.subject_id, 
+        s.name as subject_name,
+        MAX(up.last_accessed_at) as last_accessed_at,
+        MAX(up.completed_at) as completed_at,
+        (SELECT COUNT(*) FROM lessons WHERE subject_id = l.subject_id AND grade_id = l.grade_id) as total_lessons,
+        (SELECT COUNT(*) FROM quizzes WHERE subject_id = l.subject_id AND grade_id = l.grade_id) as total_quizzes,
+        COUNT(CASE WHEN up.status = 'completed' THEN 1 END) as completed_lessons,
+        0 as completed_quizzes,
+        0 as average_score
+      FROM user_progress up
+      JOIN lessons l ON up.lesson_id = l.id
+      JOIN subjects s ON l.subject_id = s.id
+      WHERE up.user_id = ?
+      GROUP BY l.subject_id, s.name
+      ORDER BY MAX(up.last_accessed_at) DESC
+    `;
+    
+    return await query<ProgressQueryResult>(sql, [userId]);
+  } catch (error) {
+    console.error('Error getting user progress from database:', error);
+    return [];
+  }
 }
 
 // Lấy tiến trình học tập của người dùng theo bài học

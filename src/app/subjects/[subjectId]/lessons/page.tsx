@@ -1,3 +1,4 @@
+// src/app/subjects/[subjectId]/lessons/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -28,7 +29,8 @@ export default function LessonsPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const params = useParams();
-  const subjectId = params.subjectId as string;
+  // Ensure subjectId is treated as a number
+  const subjectId = parseInt(params.subjectId as string, 10);
   
   const [subject, setSubject] = useState<Subject | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -39,6 +41,13 @@ export default function LessonsPage() {
     // Chuyển hướng nếu chưa đăng nhập
     if (!loading && !user) {
       router.push('/auth/login');
+      return;
+    }
+
+    // Validate subjectId is a number
+    if (isNaN(subjectId)) {
+      setError('ID môn học không hợp lệ');
+      setIsLoading(false);
       return;
     }
 
