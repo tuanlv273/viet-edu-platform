@@ -24,6 +24,16 @@ export async function getSubjectById(id: number): Promise<Subject | null> {
   return await getOne(sql, [id]);
 }
 
+// Lấy môn học theo slug
+export async function getSubjectBySlug(slug: string): Promise<Subject | null> {
+  const sql = `
+    SELECT * FROM subjects
+    WHERE slug = ?
+  `;
+
+  return await getOne(sql, [id]);
+}
+
 // Tạo môn học mới
 export async function createSubject(subject: Omit<Subject, 'id' | 'created_at'>): Promise<number> {
   const sql = `
